@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Portafolio de Manuel Plata, Diseño Gráfico." />
+  <title>Manuel Plata — Diseño Gráfico</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --text-color: #ffffff;
+      --muted: #b3b3b3;
+      --bg-dark: #0b0b0d;
+      --transition-fast: 0.25s ease;
+      --font-main: "Exo", system-ui, -apple-system, sans-serif;
+      --nav-height: 100px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--text-color);
+      background: #000;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* Contenedor central a pantalla completa */
+    .page {
+      width: 100vw;
+      position: relative;
+      background: #000;
+      overflow-x: hidden;
+    }
+
+    /* ====== BUBBLE MENU ====== */
+    .bubble-nav-container {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 9999;
+      pointer-events: none; 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bubble-toggle {
+      pointer-events: auto;
+      width: 60px;
+      height: 60px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s;
+      position: relative;
+      z-index: 10;
+    }
+
+    .bubble-toggle:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 40px rgba(255,255,255,0.2);
+    }
+
+    .bubble-toggle:active {
+      transform: scale(0.95);
+    }
+
+    .bubble-toggle svg {
+      position: absolute;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    #menuIcon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    #closeIcon {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.5);
+    }
+
+    .bubble-nav-container.open .bubble-toggle {
+      transform: scale(0.9);
+    }
+
+    .bubble-nav-container.open #menuIcon {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+
+    .bubble-nav-container.open #closeIcon {
+      opacity: 1;
+      transform: rotate(0deg) scale(1);
+    }
+
+    .bubble-menu-items {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      position: absolute;
+      top: 60px;
+    }
+
+    .bubble-item {
+      pointer-events: none;
+      height: 48px;
+      background: rgba(20, 20, 20, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      opacity: 0;
+      transform: translateY(-20px) scale(0.8);
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .bubble-item a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      font-family: var(--font-main);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      padding: 0 28px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .bubble-item:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05) !important;
+    }
+
+    .bubble-nav-container.open .bubble-item {
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .bubble-nav-container.open .bubble-item:nth-child(1) { transition-delay: 0.05s; }
+    .bubble-nav-container.open .bubble-item:nth-child(2) { transition-delay: 0.1s; }
+    .bubble-nav-container.open .bubble-item:nth-child(3) { transition-delay: 0.15s; }
+    .bubble-nav-container.open .bubble-item:nth-child(4) { transition-delay: 0.2s; }
+
+    .bubble-nav-container:not(.open) .bubble-item:nth-child(1) { transition-delay: 0.15s; }
+    .bubble-nav-container:not(.open) .bubble-item:nth-child(2) { transition-delay: 0.1s; }
+    .bubble-nav-container:not(.open) .bubble-item:nth-child(3) { transition-delay: 0.05s; }
+    .bubble-nav-container:not(.open) .bubble-item:nth-child(4) { transition-delay: 0s; }
+
+    /* ====== BLUR GLOBAL SUAVE ====== */
+    .global-blur {
+      pointer-events: none;
+      position: fixed;
+      left: 0;
+      width: 100%;
+      height: 100px; 
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .global-blur-top {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
+    }
+
+    .global-blur-bottom {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
+      mask-image: linear-gradient(to top, black 0%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
+    }
+
+    /* ====== SECCIONES BASE ====== */
+    section {
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      z-index: 2; /* Para que quede encima del fondo absoluto */
+    }
+
+    /* ====== CONTENEDOR FONDO EXPANDIDO (SECCIÓN 1 Y 2) ====== */
+    #shared-background-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 200vh; /* Cubre Presentación y Servicios */
+      z-index: 1;
+      overflow: hidden;
+      background-color: #0b0a0a;
+    }
+
+    #liquid-chrome-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    #liquid-chrome-container canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ====== SECCIÓN 1: PRESENTACIÓN ====== */
+    #presentacion {
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background: transparent;
+    }
+
+    .hero-title {
+      z-index: 10;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .portafolio-text {
+      font-size: clamp(50px, 10vw, 120px);
+      letter-spacing: 2px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .hero-subtitle {
+      color: var(--muted);
+      font-size: clamp(14px, 2vw, 18px);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ====== SECCIÓN 2: SERVICIOS ====== */
+    #servicios {
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background: transparent;
+    }
+
+    /* ===== EFECTO SKIPER TEXTO ===== */
+    .skiper58 {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 3px;
+      padding: 0;
+      margin: 0;
+      z-index: 10;
+      position: relative;
+    }
+
+    .roll {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      font-size: clamp(32px, 5vw, 64px);
+      font-weight: 800;
+      color: #fff;
+      text-transform: uppercase;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    .roll span {
+      display: inline-block;
+      position: relative;
+      transition: transform 0.3s cubic-bezier(0.45, 0, 0.55, 1);
+    }
+
+    .roll span::after {
+      content: attr(data-letter);
+      position: absolute;
+      top: 100%;
+      left: 0;
+      color: #f1f1f1;
+    }
+
+    .roll:hover span {
+      transform: translateY(-100%);
+    }
+
+    .roll span:nth-child(1), .roll span:nth-last-child(1){ transition-delay: 0s; }
+    .roll span:nth-child(2), .roll span:nth-last-child(2){ transition-delay: 0.03s; }
+    .roll span:nth-child(3), .roll span:nth-last-child(3){ transition-delay: 0.06s; }
+    .roll span:nth-child(4), .roll span:nth-last-child(4){ transition-delay: 0.09s; }
+    .roll span:nth-child(5), .roll span:nth-last-child(5){ transition-delay: 0.12s; }
+    .roll span:nth-child(6), .roll span:nth-last-child(6){ transition-delay: 0.15s; }
+    .roll span:nth-child(7), .roll span:nth-last-child(7){ transition-delay: 0.18s; }
+
+    /* ====== SOBRE MI ====== */
+    #sobre-mi {
+      /* Transición suave del fondo interactivo al fondo oscuro de la sección */
+      background: linear-gradient(82deg, #0b0a0a 0%, #000 100%);
+      align-items: center;
+      justify-content: center;
+      padding: 100px 100px 0;
+      gap: 80px;
+    }
+
+    .about-photo img {
+      height: 500px;
+      width: auto;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+
+    .about-text {
+      max-width: 520px;
+    }
+
+    .about-text .name-img {
+      width: 260px;
+      height: auto;
+      display: block;
+      margin-bottom: 24px;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* Estilos para los botones de CV y Demo Reel */
+    .about-buttons {
+      margin-top: 32px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .about-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 28px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 40px;
+      transition: all var(--transition-fast);
+    }
+
+    .btn-solid {
+      background: #ffffff;
+      color: #000000;
+      border: 1px solid #ffffff;
+    }
+
+    .btn-solid:hover {
+      background: transparent;
+      color: #ffffff;
+      transform: translateY(-3px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(5px);
+    }
+
+    .btn-outline:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      transform: translateY(-3px);
+    }
+
+    /* ====== PROYECTOS ====== */
+    #proyectos {
+      background: #000;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 100px 120px 60px;
+      gap: 24px;
+    }
+
+    .proyectos-header {
+      width: 100%;
+      max-width: 1100px;
+      text-align: left;
+    }
+
+    #proyectos h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    #proyectos p {
+      color: var(--muted);
+      max-width: 700px;
+    }
+
+    /* ====== GALERÍA SKIPER52 ====== */
+    .projects-gallery {
+      margin-top: 16px;
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+
+    .project-item {
+      position: relative;
+      flex: 0 0 5rem;              
+      height: 28rem;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.35s ease-in-out;
+      transform-origin: center center;
+      background: #111;
+    }
+
+    .project-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .project-item.active {
+      flex-basis: 28rem;           
+    }
+
+    .project-item.active::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent 50%);
+      pointer-events: none;
+    }
+
+    .project-code {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+      z-index: 2;
+    }
+
+    .project-item.active .project-code {
+      opacity: 1;
+    }
+
+    .project-item:hover {
+      transform: translateY(-4px);
+    }
+
+    /* ====== TEXTO DINÁMICO DE PROYECTOS ====== */
+    .project-details-container {
+      margin-top: 40px;
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      min-height: 140px; /* Evita saltos de diseño al cambiar el texto */
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .project-details-container h3 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
+    .project-details-container p {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .pd-disciplines {
+      font-size: 12px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .pd-disciplines strong {
+      color: #ccc;
+    }
+
+    /* ====== CONTACTO ====== */
+    #contacto {
+      background: #000; 
+      overflow: hidden; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Texto Animado de Fondo (MAKE IT) */
+    #contacto .card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1; 
+      pointer-events: none;
+      opacity: 0.15; 
+      width: 100%;
+    }
+
+    #contacto .loader {
+      color: #fff; 
+      font-weight: 800; 
+      font-size: clamp(60px, 12vw, 150px); 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 20px; 
+      line-height: 1; 
+      white-space: nowrap;
+    }
+
+    .words {
+      overflow: hidden;
+      position: relative;
+      height: 1.2em;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .word {
+      display: block;
+      height: 1.2em;
+      padding: 0;
+      margin: 0;
+      color: #f1f1f1;
+      animation: spin_4991 6s infinite;
+    }
+
+    @keyframes spin_4991 {
+      0%, 8%   { transform: translateY(0); }
+      10%, 23% { transform: translateY(-100%); }
+      25%, 38% { transform: translateY(-200%); }
+      40%, 53% { transform: translateY(-300%); }
+      55%, 100%{ transform: translateY(0); }
+    }
+
+    /* ====== CONTENEDOR DEL LANYARD ====== */
+    .lanyard-wrapper {
+      position: absolute;
+      top: -100px; 
+      left: 50%;
+      transform-origin: top center;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      perspective: 1200px;
+      animation: sway 6s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+    }
+
+    @keyframes sway {
+      0% { transform: translateX(-50%) rotate(-3deg); }
+      100% { transform: translateX(-50%) rotate(3deg); }
+    }
+
+    .lanyard-strap {
+      width: 18px;
+      height: 350px;
+      background: #1a1a1a;
+      background-image: repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(255,255,255,0.03) 4px, rgba(255,255,255,0.03) 8px);
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 2px 0 10px rgba(0,0,0,0.5);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .gafete-clip {
+      width: 24px;
+      height: 35px;
+      background: linear-gradient(to right, #666, #ccc, #666);
+      border-radius: 4px;
+      margin-top: -10px;
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+      position: relative;
+    }
+    
+    .gafete-clip::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 12px;
+      height: 20px;
+      border: 3px solid #999;
+      border-radius: 10px;
+      clip-path: inset(0 0 50% 0); 
+    }
+
+    .gafete-card {
+      margin-top: 10px;
+      width: 320px;
+      background: rgba(30, 30, 30, 0.4);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 16px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.02);
+      transform-style: preserve-3d;
+      transition: transform 0.1s; 
+      cursor: crosshair;
+    }
+
+    .gafete-hole {
+      width: 50px;
+      height: 8px;
+      background: #000;
+      border-radius: 10px;
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.2);
+    }
+
+    .gafete-photo {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-top: 10px;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+
+    .gafete-title {
+      margin-top: 16px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #fff;
+    }
+
+    .gafete-subtitle {
+      font-size: 12px;
+      color: #a0a0a0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    .gafete-divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255,255,255,0.2), transparent);
+      margin-bottom: 24px;
+    }
+
+    .gafete-links {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .gafete-links a {
+      display: block;
+      text-align: center;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(0,0,0,0.3);
+      transition: all var(--transition-fast);
+      transform: translateZ(20px); 
+    }
+
+    .gafete-links a:hover {
+      background: #ffffff;
+      color: #000000;
+      border-color: #ffffff;
+      transform: translateZ(30px) scale(1.02); 
+    }
+
+    .gafete-footer {
+      margin-top: 24px;
+      font-size: 10px;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 24px;
+      font-size: 12px;
+      color: #555;
+      width: 100%;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    /* ====== MEDIA QUERIES (Responsive) ====== */
+    @media (max-width: 900px) {
+      #sobre-mi {
+        flex-direction: column;
+        padding: 140px 24px 40px;
+        text-align: center;
+      }
+
+      .about-photo img {
+        height: 350px;
+      }
+
+      .about-text {
+        max-width: 90%;
+      }
+
+      .about-text .name-img {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .about-buttons {
+        justify-content: center;
+      }
+
+      #proyectos {
+        padding: 120px 24px 40px;
+      }
+
+      .projects-gallery {
+        max-width: 100%;
+        overflow-x: auto;
+        padding-bottom: 8px;
+        gap: 4px;
+      }
+
+      .project-item {
+        flex: 0 0 12rem;
+        height: 20rem;
+      }
+
+      .project-item.active {
+        flex-basis: 18rem;
+      }
+      
+      #contacto .loader {
+        font-size: clamp(40px, 15vw, 80px);
+      }
+
+      .lanyard-wrapper {
+        top: -50px;
+      }
+
+      .lanyard-strap {
+        height: 200px;
+      }
+
+      .gafete-card {
+        width: 280px;
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="page">
+
+  <div id="shared-background-area">
+    <div id="liquid-chrome-container"></div>
+  </div>
+
+  <div class="bubble-nav-container" id="bubbleNav" aria-label="Navegación principal">
+    <div class="bubble-toggle" id="bubbleToggle" role="button" aria-expanded="false" aria-label="Alternar menú">
+      <svg id="menuIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <svg id="closeIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </div>
+    <div class="bubble-menu-items">
+      <div class="bubble-item"><a href="#presentacion">Inicio</a></div>
+      <div class="bubble-item"><a href="#sobre-mi">Sobre mi</a></div>
+      <div class="bubble-item"><a href="#proyectos">Proyectos</a></div>
+      <div class="bubble-item"><a href="#contacto">Contacto</a></div>
+    </div>
+  </div>
+  
+  <div class="global-blur global-blur-top"></div>
+  <div class="global-blur global-blur-bottom"></div>
+
+  <main>
+    
+    <section id="presentacion" aria-label="Presentación">
+      <div class="hero-title">
+        <div class="roll portafolio-text" data-word="PORTAFOLIO">PORTAFOLIO</div>
+        <p class="hero-subtitle">Manuel Plata · Diseño Gráfico</p>
+      </div>
+    </section>
+
+    <section id="servicios" aria-label="Servicios">
+      <ul class="skiper58">
+        <li class="roll" data-word="DESIGN">DESIGN</li>
+        <li class="roll" data-word="BRANDING">BRANDING</li>
+        <li class="roll" data-word="UX / UI">UX / UI</li>
+        <li class="roll" data-word="MARKETING">MARKETING</li>
+        <li class="roll" data-word="ILLUSTRATION">ILLUSTRATION</li>
+      </ul>
+    </section>
+
+    <section id="sobre-mi" aria-label="Sobre mi">
+      <div class="about-photo">
+        <img src="manuel-plata.JPG" alt="Retrato de Manuel Plata">
+      </div>
+      <div class="about-text">
+        <img src="nombre-mio.png" alt="Manuel Plata" class="name-img">
+        <p>
+          Diseñador gráfico especializado en Branding y Rebranding, con habilidades en UX/UI,
+          animación, prototipado rápido, edición de video y motion graphics.
+          Me caracterizo por la atención al detalle, la adaptación a tendencias
+          y la creación de identidades visuales claras, memorables y funcionales.
+        </p>
+        
+        <div class="about-buttons">
+          <a href="https://drive.google.com/drive/folders/1e1azBasnaS-nF-y_RVJfS1KaXBPvr1MZ?usp=share_link" target="_blank" rel="noopener noreferrer" class="about-btn btn-solid">Ver CV</a>
+          <a href="https://drive.google.com/drive/folders/1vP4p6FXk_WqSktgkHkpTvxHabel4l734?usp=share_link" target="_blank" rel="noopener noreferrer" class="about-btn btn-outline">Demo Reel</a>
+        </div>
+        
+      </div>
+    </section>
+
+    <section id="proyectos" aria-label="Proyectos">
+      <div class="proyectos-header">
+        <h2>Proyectos</h2>
+        <p>Una selección de identidades visuales, aplicaciones y estrategias de diseño.</p>
+      </div>
+      
+      <div class="projects-gallery">
+        <div class="project-item active">
+          <img src="PORTAFOLIO-01.jpg" alt="Proyecto 1">
+          <span class="project-code">#01</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-02.jpg" alt="Proyecto 2">
+          <span class="project-code">#02</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-03.jpg" alt="Proyecto 3">
+          <span class="project-code">#03</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-04.jpg" alt="Proyecto 4">
+          <span class="project-code">#04</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-05.jpg" alt="Proyecto 5">
+          <span class="project-code">#05</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-06.jpg" alt="Proyecto 6">
+          <span class="project-code">#06</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-07.jpg" alt="Proyecto 7">
+          <span class="project-code">#07</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-08.jpg" alt="Proyecto 8">
+          <span class="project-code">#08</span>
+        </div>
+        <div class="project-item">
+          <img src="PORTAFOLIO-09.jpg" alt="Proyecto 9">
+          <span class="project-code">#09</span>
+        </div>
+      </div>
+
+      <div class="project-details-container" id="project-details">
+        <h3 id="pd-title">Cargando...</h3>
+        <p id="pd-desc">...</p>
+        <div class="pd-disciplines">
+          <strong>Disciplinas involucradas:</strong> <span id="pd-disc">...</span>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="contacto" aria-label="Contacto">
+      <div class="card">
+        <div class="loader">
+          MAKE IT
+          <div class="words">
+            <span class="word">MARK</span>
+            <span class="word">PERFECT</span>
+            <span class="word">MEMORABLE</span>
+            <span class="word">BETTER</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lanyard-wrapper">
+        <div class="lanyard-strap"></div>
+        <div class="gafete-clip"></div>
+        
+        <div class="gafete-card" id="gafeteCard">
+          <div class="gafete-hole"></div>
+          
+          <img src="manuel-plata.JPG" alt="Manuel Plata" class="gafete-photo">
+          
+          <h3 class="gafete-title">Manuel Plata</h3>
+          <p class="gafete-subtitle">Director / Diseño Gráfico</p>
+          
+          <div class="gafete-divider"></div>
+
+          <div class="gafete-links">
+            <a href="tel:7291290215">📞 729 129 0215</a>
+            <a href="mailto:visualmanolo@gmail.com">✉️ visualmanolo@gmail.com</a>
+            <a href="https://www.instagram.com/visualmst" target="_blank" rel="noopener noreferrer">📷 @visualmst</a>
+          </div>
+
+          <p class="gafete-footer">Despacho de Diseño</p>
+        </div>
+      </div>
+      
+      <footer>© <span id="year"></span> Manuel Plata · Diseño Gráfico</footer>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Lógica del Bubble Menu
+  const bubbleNav = document.getElementById('bubbleNav');
+  const bubbleToggle = document.getElementById('bubbleToggle');
+  const bubbleLinks = document.querySelectorAll('.bubble-item a');
+
+  function toggleMenu() {
+    bubbleNav.classList.toggle('open');
+    const isExpanded = bubbleNav.classList.contains('open');
+    bubbleToggle.setAttribute('aria-expanded', isExpanded);
+  }
+
+  bubbleToggle.addEventListener('click', (e) => {
+    e.stopPropagation(); 
+    toggleMenu();
+  });
+
+  bubbleLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      if (bubbleNav.classList.contains('open')) toggleMenu();
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (bubbleNav.classList.contains('open') && !bubbleNav.contains(e.target)) {
+      toggleMenu();
+    }
+  });
+
+  // Hero Text Skiper (Aplica a .roll)
+  document.querySelectorAll('.roll').forEach((el) => {
+    const text = el.dataset.word;
+    el.innerHTML = '';
+    [...text].forEach(letter => {
+      const span = document.createElement('span');
+      if (letter === ' ') span.innerHTML = '&nbsp;'; 
+      else span.textContent = letter;
+      span.dataset.letter = letter;
+      el.appendChild(span);
+    });
+  });
+
+  // Año del Footer
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  window.addEventListener('load', function () {
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+      window.scrollTo(0, 0);
+    }
+  });
+
+  // ==========================================
+  // LÓGICA DE TEXTO DINÁMICO Y GALERÍA
+  // ==========================================
+  const projectData = [
+    {
+      title: "Si Soy App — UX/UI",
+      desc: "Rediseño integral de interfaz y experiencia de usuario para aplicación orientada a la salud mental. Creación de flujos intuitivos y contenido que fomentan la retención y bienestar del usuario.",
+      disc: "Investigación UX, Psicología Cognitiva, Diseño de Interfaces."
+    },
+    {
+      title: "Bodas de Lujo — Diseño Espacial",
+      desc: "Identidad visual y diseño de escenarios para eventos de lujo en locaciones como Hacienda Galindo. El concepto se basa en una estética boho y arquitectura moderna, integrando la marca con el entorno espacial.",
+      disc: "Diseño de Espacios, Arquitectura Efímera, Dirección de Arte."
+    },
+    {
+      title: "Dulce Espera, Sin Riesgos",
+      desc: "Campaña de concientización y comunicación preventiva sobre salud médica. Diseño de materiales gráficos multidisciplinarios enfocados en informar de manera clara, empática y accesible para públicos diversos.",
+      disc: "Comunicación Médica, Diseño de Información, Ilustración."
+    },
+    {
+      title: "Rebranding Corporativo",
+      desc: "Evolución de identidad corporativa. Desarrollo de un sistema visual escalable que refleja los nuevos valores de la marca, asegurando la coherencia en aplicaciones físicas y digitales.",
+      disc: "Estrategia de Negocios, Semiótica, Arquitectura de Marca."
+    },
+    {
+      title: "Plataformas Interactivas",
+      desc: "Desarrollo de interfaces digitales de alto rendimiento utilizando librerías visuales avanzadas y código. Integración de efectos inmersivos para portafolios interactivos y presentaciones web.",
+      disc: "Desarrollo Front-end (React), Diseño de Interacción, UX Writing."
+    },
+    {
+      title: "Packaging y Producto",
+      desc: "Diseño de empaques centrados en la experiencia de desempaquetado (unboxing) y la sustentabilidad. Selección de materiales y acabados que elevan la percepción de valor del producto.",
+      disc: "Diseño Industrial, Ingeniería de Papel, Sostenibilidad."
+    },
+    {
+      title: "Diseño Editorial",
+      desc: "Maquetación y dirección de arte para publicaciones impresas. Uso riguroso de retículas, jerarquía tipográfica y tratamiento fotográfico para narrativas visuales de gran impacto.",
+      disc: "Periodismo Visual, Tipografía Avanzada, Producción Impresa."
+    },
+    {
+      title: "Motion Graphics Reel",
+      desc: "Animación de logotipos e interfaces para presentaciones dinámicas. Uso de curvas de animación fluidas y diseño sonoro para potenciar el mensaje de la marca a través del tiempo.",
+      disc: "Cinemática, Diseño Sonoro, Animación Digital."
+    },
+    {
+      title: "Renderizado Arquitectónico",
+      desc: "Visualización 3D y dirección de fotografía técnica para proyectos arquitectónicos. Configuración precisa de iluminación, simulando lentes fijos de 85mm (f/1.8) y sensores full-frame para un fotorrealismo superior.",
+      disc: "Modelado 3D, Fotografía Técnica, Iluminación Virtual."
+    }
+  ];
+
+  const projectDetails = document.getElementById('project-details');
+  const pdTitle = document.getElementById('pd-title');
+  const pdDesc = document.getElementById('pd-desc');
+  const pdDisc = document.getElementById('pd-disc');
+  const projectItems = document.querySelectorAll('.project-item');
+
+  const updateProjectDetails = (index) => {
+    projectDetails.style.opacity = 0; // Inicia el fade out
+    
+    setTimeout(() => {
+      pdTitle.textContent = projectData[index].title;
+      pdDesc.textContent = projectData[index].desc;
+      pdDisc.textContent = projectData[index].disc;
+      projectDetails.style.opacity = 1; // Inicia el fade in
+    }, 300); // Tiempo que espera para cambiar el texto (sincronizado con CSS)
+  };
+
+  projectItems.forEach((item, index) => {
+    const activate = () => {
+      if (item.classList.contains('active')) return; // Evita recargar si ya está activo
+      
+      projectItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      updateProjectDetails(index);
+    };
+
+    item.addEventListener('mouseenter', activate);
+    item.addEventListener('click', activate);
+  });
+
+  // Inicializa el texto con el primer proyecto al cargar la página
+  updateProjectDetails(0);
+
+
+  // Lógica 3D del Gafete (Lanyard)
+  const contactoSection = document.getElementById('contacto');
+  const gafeteCard = document.getElementById('gafeteCard');
+
+  contactoSection.addEventListener('mousemove', (e) => {
+    const rect = gafeteCard.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const mouseX = (e.clientX - centerX) / (rect.width / 2);
+    const mouseY = (e.clientY - centerY) / (rect.height / 2);
+
+    const rotateX = mouseY * -15; 
+    const rotateY = mouseX * 15;
+
+    gafeteCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+  });
+
+  contactoSection.addEventListener('mouseleave', () => {
+    gafeteCard.style.transform = `rotateX(0deg) rotateY(0deg)`;
+  });
+</script>
+
+<script type="module">
+  import { Renderer, Program, Mesh, Triangle } from 'https://esm.sh/ogl@1.0.11';
+
+  const container = document.getElementById('liquid-chrome-container');
+  const sharedArea = document.getElementById('shared-background-area');
+
+  if (container && sharedArea) {
+    const renderer = new Renderer({ antialias: true, alpha: true });
+    const gl = renderer.gl;
+    container.appendChild(gl.canvas);
+    
+    gl.clearColor(0, 0, 0, 0);
+
+    const vertexShader = `
+      attribute vec2 position;
+      attribute vec2 uv;
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = vec4(position, 0.0, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      precision highp float;
+      uniform float uTime;
+      uniform vec3 uResolution;
+      uniform vec3 uBaseColor;
+      uniform float uAmplitude;
+      uniform float uFrequencyX;
+      uniform float uFrequencyY;
+      uniform vec2 uMouse;
+      varying vec2 vUv;
+
+      vec4 renderImage(vec2 uvCoord) {
+          vec2 fragCoord = uvCoord * uResolution.xy;
+          vec2 uv = (2.0 * fragCoord - uResolution.xy) / min(uResolution.x, uResolution.y);
+
+          for (float i = 1.0; i < 10.0; i++){
+              uv.x += uAmplitude / i * cos(i * uFrequencyX * uv.y + uTime + uMouse.x * 3.14159);
+              uv.y += uAmplitude / i * cos(i * uFrequencyY * uv.x + uTime + uMouse.y * 3.14159);
+          }
+
+          vec2 diff = (uvCoord - uMouse);
+          float dist = length(diff);
+          float falloff = exp(-dist * 20.0);
+          float ripple = sin(10.0 * dist - uTime * 2.0) * 0.03;
+          uv += (diff / (dist + 0.0001)) * ripple * falloff;
+
+          vec3 color = uBaseColor / abs(sin(uTime - uv.y - uv.x));
+          return vec4(color, 1.0);
+      }
+
+      void main() {
+          vec4 col = vec4(0.0);
+          int samples = 0;
+          for (int i = -1; i <= 1; i++){
+              for (int j = -1; j <= 1; j++){
+                  vec2 offset = vec2(float(i), float(j)) * (1.0 / min(uResolution.x, uResolution.y));
+                  col += renderImage(vUv + offset);
+                  samples++;
+              }
+          }
+          gl_FragColor = col / float(samples);
+      }
+    `;
+
+    const baseColor = [0.043137254901960784, 0.0392156862745098, 0.0392156862745098];
+
+    const geometry = new Triangle(gl);
+    const program = new Program(gl, {
+      vertex: vertexShader,
+      fragment: fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uResolution: { value: new Float32Array([gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height]) },
+        uBaseColor: { value: new Float32Array(baseColor) },
+        uAmplitude: { value: 0.3 }, 
+        uFrequencyX: { value: 3 },
+        uFrequencyY: { value: 3 },
+        uMouse: { value: new Float32Array([0, 0]) }
+      }
+    });
+
+    const mesh = new Mesh(gl, { geometry, program });
+
+    function resize() {
+      renderer.setSize(window.innerWidth, sharedArea.offsetHeight);
+      program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height];
+    }
+    
+    window.addEventListener('resize', resize);
+    resize();
+
+    function handleMouseMove(event) {
+      const rect = sharedArea.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width;
+      const y = 1.0 - (event.clientY - rect.top) / rect.height;
+      program.uniforms.uMouse.value[0] = x;
+      program.uniforms.uMouse.value[1] = y;
+    }
+
+    function handleTouchMove(event) {
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        const rect = sharedArea.getBoundingClientRect();
+        const x = (touch.clientX - rect.left) / rect.width;
+        const y = 1.0 - (touch.clientY - rect.top) / rect.height;
+        program.uniforms.uMouse.value[0] = x;
+        program.uniforms.uMouse.value[1] = y;
+      }
+    }
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
+
+    function update(t) {
+      requestAnimationFrame(update);
+      program.uniforms.uTime.value = t * 0.001 * 0.2;
+      renderer.render({ scene: mesh });
+    }
+    
+    requestAnimationFrame(update);
+  }
+</script>
+
+</body>
+</html>
